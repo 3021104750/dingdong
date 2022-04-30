@@ -7,8 +7,31 @@ import 'normalize.css';
 import './assets/css/initCss.css'; // 初始化全局样式
 import './assets/css/iconfont.css'; // icon字体样式
 import 'animate.css'; // 动画库
-
-import { Lazyload, Button, Col, Row, Image as VanImage, Search, Grid, GridItem, Tab, Tabs, Card, Stepper, NumberKeyboard, Empty, Badge, SubmitBar, Checkbox, AddressList, DropdownMenu, DropdownItem, NavBar, AddressEdit } from 'vant';
+import {
+  Lazyload,
+  Button,
+  Col,
+  Row,
+  Image as VanImage,
+  Search,
+  Grid,
+  GridItem,
+  Tab,
+  Tabs,
+  Card,
+  Stepper,
+  NumberKeyboard,
+  Empty,
+  Badge,
+  SubmitBar,
+  Checkbox,
+  AddressList,
+  DropdownMenu,
+  DropdownItem,
+  NavBar,
+  AddressEdit,
+  PullRefresh
+} from 'vant';
 
 const app = createApp(App);
 
@@ -16,8 +39,8 @@ app.use(store).use(router);
 
 app.use(Lazyload, {
   lazyComponent: true,
-  loading: '@/assets/images/lazyLoad/loading.gif',
-  error: '@/assets/images/lazyLoad/error.webp'
+  loading: './assets/images/lazyLoad/loading.gif',
+  error: './assets/images/lazyLoad/error.webp'
 }).use(Button)
   .use(Col)
   .use(Row)
@@ -38,6 +61,7 @@ app.use(Lazyload, {
   .use(DropdownMenu)
   .use(DropdownItem)
   .use(NavBar)
-  .use(AddressEdit);
+  .use(AddressEdit)
+  .use(PullRefresh);
 
 app.mount('#app');

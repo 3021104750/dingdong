@@ -9,63 +9,84 @@
       >去买菜</van-button
     >
   </van-empty>
-  <!-- ul -->
-  <ul class="cart-container" v-if="showCartContainer">
-    <!-- li -->
-    <li
-      v-for="(item, index) in cartList"
-      :key="item.productCartId"
-      class="cart-container-li"
-    >
-      <!-- van-checkbox -->
-      <van-checkbox
-        v-model="initCheckbox['checkbox_' + index]"
-        checked-color="#219142"
-        @click="changeCheckbox(index)"
-      ></van-checkbox>
-      <!-- van-card -->
-      <!-- 初次见面时，计算商品的总共价格 -->
-      <van-card
-        :price="
-          (item.productPriceAll = (item.productCount * item.productPrice)
-            .toFixed(2)
-            .toString())
-        "
-        :desc="item.productInfo"
-        :title="item.productTitle"
-        :thumb="item.productImg"
-        :lazy-load="true"
-        class="van-card"
+  <!-- van-pull-refresh -->
+  <van-pull-refresh v-model="loading" :head-height="80" @refresh="onRefresh">
+    <!-- 下拉提示，通过 scale 实现一个缩放效果 -->
+    <template #pulling="props">
+      <img
+        class="doge"
+        src="../../assets/images/pull_refresh/loosing.webp"
+        :style="{ transform: `scale(${props.distance / 80})` }"
+      />
+    </template>
+
+    <!-- 释放提示 -->
+    <template #loosing>
+      <img class="doge" src="../../assets/images/pull_refresh/loosing.webp" />
+    </template>
+
+    <!-- 加载提示 -->
+    <template #loading>
+      <img class="doge" src="../../assets/images/pull_refresh/releasing.webp" />
+    </template>
+    <!-- ul -->
+    <ul class="cart-container" v-if="showCartContainer">
+      <!-- li -->
+      <li
+        v-for="(item, index) in cartList"
+        :key="item.productCartId"
+        class="cart-container-li"
       >
-        <!-- van-stepper 进步器 -->
-        <template #tags>
-          <van-stepper
-            v-model="initVanStepperInput['input_' + index]"
-            theme="round"
-            input-width="1.5rem"
-            button-size="0.7rem"
-            style="margin: 0.4rem 0rem 0.8rem"
-            integer
-            min="1"
-            max="9999"
-            :long-press="false"
-            @change="changeVanStepperInput(item.productCartId, index)"
-          />
-        </template>
-        <!-- 移除按钮 -->
-        <template #num>
-          <van-button
-            round
-            color="#219142"
-            size="mini"
-            style="z-index: 9"
-            @touchstart="removeProduct(item.productCartId, index)"
-            ><i class="icon-minus"></i>移除</van-button
-          >
-        </template>
-      </van-card>
-    </li>
-  </ul>
+        <!-- van-checkbox -->
+        <van-checkbox
+          v-model="initCheckbox['checkbox_' + index]"
+          checked-color="#219142"
+          @click="changeCheckbox(index)"
+        ></van-checkbox>
+        <!-- van-card -->
+        <!-- 初次见面时，计算商品的总共价格 -->
+        <van-card
+          :price="
+            (item.productPriceAll = (item.productCount * item.productPrice)
+              .toFixed(2)
+              .toString())
+          "
+          :desc="item.productInfo"
+          :title="item.productTitle"
+          :thumb="item.productImg"
+          :lazy-load="true"
+          class="van-card"
+        >
+          <!-- van-stepper 进步器 -->
+          <template #tags>
+            <van-stepper
+              v-model="initVanStepperInput['input_' + index]"
+              theme="round"
+              input-width="1.5rem"
+              button-size="0.7rem"
+              style="margin: 0.4rem 0rem 0.8rem"
+              integer
+              min="1"
+              max="9999"
+              :long-press="false"
+              @change="changeVanStepperInput(item.productCartId, index)"
+            />
+          </template>
+          <!-- 移除按钮 -->
+          <template #num>
+            <van-button
+              round
+              color="#219142"
+              size="mini"
+              style="z-index: 9"
+              @touchstart="removeProduct(item.productCartId, index)"
+              ><i class="icon-minus"></i>移除</van-button
+            >
+          </template>
+        </van-card>
+      </li>
+    </ul>
+  </van-pull-refresh>
   <!-- 底部提交订单 -->
   <van-submit-bar
     :price="priceAll"
@@ -136,9 +157,18 @@ export default {
     let cartList = computed(() => $store.state.Cart.cartList);
 
     let showEmpty = ref(false); // 是否显示空状态
-    let showCartContainer = ref(true); // 是否显示购物车模块 van-card 用来每次激活页面的时候 重绘 使图片懒加载加载出来 否则图片不加载
+    let showCartContainer = ref(false); // 是否显示购物车模块 van-card 用来每次激活页面的时候 重绘 使图片懒加载加载出来 否则图片不加载
     let showVanSubmitBarTip = ref(false); // 是否显示 van-submit-bar__tip 栏
     let initVanStepperInput = reactive({}); // 初始化 van-stepper-input
+
+    const loading = ref(false);
+    // 下拉刷新
+    const onRefresh = () => {
+      setTimeout(() => {
+        Toast('刷新成功（手动狗头）');
+        loading.value = false;
+      }, 1000);
+    };
 
     // 每次激活页面时，查看cartList是否有值，有值则显示product，无值则显示提示
     onActivated(() => {
@@ -152,12 +182,12 @@ export default {
           initVanStepperInput['input_' + i] = cartList.value[i].productCount; // 循环遍历初始化每一个input为1，动态绑定变量
         }
         showEmpty.value = false;
+        // 页面激活时 用来每次激活页面的时候 重绘 使图片懒加载加载出来 否则图片不加载
+        showCartContainer.value = false;
+        nextTick(() => {
+          showCartContainer.value = true;
+        });
       }
-      // 页面激活时 用来每次激活页面的时候 重绘 使图片懒加载加载出来 否则图片不加载
-      showCartContainer.value = false;
-      nextTick(() => {
-        showCartContainer.value = true;
-      });
     });
 
     // van-stepper-input 值改变时。（点击 van-stepper-plus 或 van-stepper-minus 或 van-stepper-input 值改变后）
@@ -329,6 +359,8 @@ export default {
     rememberScrollY(); // hook 记录离开时滚动条位置，激活页面时返回其位置
 
     return {
+      loading,
+      onRefresh,
       touchEmptyButton,
       cartList,
       showEmpty,
@@ -350,7 +382,15 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.doge {
+  width: 3.2rem;
+  height: 3.2rem;
+  margin: 0.32rem 0;
+  border-radius: 0.16rem;
+}
+
 .cart-container {
+  min-height: 26.68rem;
   margin-bottom: 3.16rem;
   .cart-container-li {
     display: flex;
