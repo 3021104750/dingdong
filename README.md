@@ -1,24 +1,28 @@
-# m_weibo
+# dingdong
 
-## Project setup
+## 摘要
 ```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
+仅用于学习而模仿写的静态网页
 ```
 
-### Compiles and minifies for production
+### 描述
 ```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
+1. 模仿叮咚买菜制作的购物车静态页面，适配移动端。
+2. 375*667 像素草稿，使用单位 rem 进行适配.
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### 使用技术
+* 语言
+  > Html  
+  > Css  
+  > JavaScript
+* 适配方案
+  > flexible.js  
+  > postcss-pxtorem  
+  > 媒体查询
+* 框架
+  > Vue 3.0
+* 组件库
+  > Vant
+* 动画库
+  > animate.css
