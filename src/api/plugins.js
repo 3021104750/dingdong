@@ -4,7 +4,8 @@
           id：dom元素id
           duration：动画执行时间（可省略）
           prefix：默认动画class前缀（可省略）
-  @return 返回一个promise函数 */
+  @return 返回一个promise函数
+*/
 export const animateForMultipleDoms = (element, animation, id, duration = '0.5s', prefix = 'animate__') => {
   // We create a Promise and return it
   return new Promise((resolve, reject) => {
@@ -46,7 +47,8 @@ export const animateForMultipleDoms = (element, animation, id, duration = '0.5s'
           id：dom元素id
           duration：动画执行时间（可省略）
           prefix：默认动画class前缀 (可省略)
-  @return 返回一个promise函数。 */
+  @return 返回一个promise函数。
+*/
 export const animateForSingleDom = (element, animation, duration = '0.5s', prefix = 'animate__') =>
   // We create a Promise and return it
   new Promise((resolve, reject) => {
@@ -70,7 +72,8 @@ export const animateForSingleDom = (element, animation, duration = '0.5s', prefi
 /* 防抖
   @param  fn：回调函数
           delay：延迟时间
-  @return 返回一个函数，设置定时器返回一个回调。 */
+  @return 返回一个函数，设置定时器返回一个回调。
+*/
 export const debounce = (fn, delay = 600) => {
   let timer = null;
   return function () {
@@ -86,7 +89,8 @@ export const debounce = (fn, delay = 600) => {
 /* 防抖 升级版 第一次立即出发 之后防抖
   @param  fn：回调函数
           delay：延迟时间
-  @return 返回一个函数，设置定时器返回一个回调。 */
+  @return 返回一个函数，设置定时器返回一个回调。
+*/
 export const debounceLater = (fn, delay = 600) => {
   let timer = null;
   let flag = true;
@@ -95,19 +99,21 @@ export const debounceLater = (fn, delay = 600) => {
     if (flag) {
       fn.apply(this, arguments);
       flag = false;
-    } else {
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        flag = true;
-      }, delay);
     }
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(() => {
+      flag = true;
+    }, delay);
   };
 };
 
 /* 节流 时间戳方法
   @param  fn：回调函数
           delay：延迟时间
-  @return 返回一个函数，如果现在时间剪去过去时间大于delay，返回一个回调。 */
+  @return 返回一个函数，如果现在时间剪去过去时间大于delay，返回一个回调。
+*/
 export const throttle = (fn, delay = 600) => {
   let last = 0;
   return function () {
@@ -122,7 +128,8 @@ export const throttle = (fn, delay = 600) => {
 /* 节流 定时器方法
   @param  fn：回调函数
           delay：延迟时间
-  @return 返回一个函数，设置定时器返回一个回调。 */
+  @return 返回一个函数，设置定时器返回一个回调。
+*/
 // export const throttle = (fn, delay = 600) => {
 //   let flag = true;
 //   return function () {

@@ -23,7 +23,7 @@
 ### 使用技术
 * 语言
   > Html  
-  > Css  
+  > Css（Less）  
   > JavaScript
 * 初始化
   > normalize.css  
